@@ -11,9 +11,9 @@ class categoryFields{
 
 class category{
   final int? category_id;
-  final String category_name;
+  late final String category_name;
 
-  const category({
+   category({
     this.category_id,
     required this.category_name
   });
