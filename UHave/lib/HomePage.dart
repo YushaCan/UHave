@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:uhave_project/form.dart';
+import 'package:uhave_project/modules/category.dart';
+import 'package:uhave_project/multi_form.dart';
 
 import 'Calendar.dart';
 
@@ -11,36 +14,13 @@ class _HomePageState extends State<HomePage> {
   bool pressed= false;
   @override
   Widget build(BuildContext context){
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Routing to calendar"),
+    return MaterialApp(
+      title: 'Categories',
+      theme: ThemeData(
+        primarySwatch: Colors.lightBlue,
+        accentColor: Colors.greenAccent,
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(
-              'First Page',
-              style: TextStyle(fontSize: 50),
-            ),
-            RaisedButton(
-              child: Text("Ev"),
-              onPressed: () {
-                Navigator.of(context).pushNamed('/calendar');
-              },
-            ),
-            RaisedButton(
-              child: Text("Add New Model"),
-              onPressed: () {
-                setState(() {
-                  pressed = true;
-                });
-              },
-            ),
-            pressed? Text("the button is pressed") : SizedBox(),
-          ],
-        ),
-      ),
-    );
+      home: MultiForm(),
+      );
   }
 }
