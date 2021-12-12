@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "calendar",
       home: HomePage(),
-      routes: {'/calendar': (_) => Calendar()},
+      //routes: {'/calendar': (_) => Calendar()},
       //bu örnekte static veriler sadece transfer edilir sayfalar arasında
       //onGenerateRoute: (settings){},
     );
