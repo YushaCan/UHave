@@ -2,12 +2,23 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import 'DetailedList.dart';
+
 class Calendar extends StatefulWidget{
+
+  late int categoryId;
+
+  Calendar({required this.categoryId});
+
   @override
-  State<Calendar> createState() => _CalendarState();
+  State<Calendar> createState() => _CalendarState(categoryId);
 }
 
 class _CalendarState extends State<Calendar> {
+
+  late int categoryId;
+
+  _CalendarState(this.categoryId);
   CalendarFormat format= CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
@@ -36,8 +47,10 @@ class _CalendarState extends State<Calendar> {
           setState(() {
             selectedDay = selectDay;
             focusedDay = focusDay;
+            print(selectedDay);
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DetailedList(categoryId: this.categoryId,tarih: selectedDay.toString())));
           });
-          print(focusedDay);
+
         },
         //to style the calendar
         calendarStyle: CalendarStyle(
