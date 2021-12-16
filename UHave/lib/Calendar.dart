@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:uhave_project/event.dart';
 import 'DetailedList.dart';
+import 'package:uhave_project/services/detailedlist_service.dart';
+import 'modules/detailedList.dart';
 
 class Calendar extends StatefulWidget {
   late int categoryId;
@@ -16,6 +18,15 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   late int categoryId;
+  var _detailedListList;
+
+  var detailedLists;
+
+  var detailedListe;
+
+  var _DetailedListService = DetailedListService();
+
+  var _detailedList = detailedList();
   // To Hold Events
   late Map<DateTime, List<Event>> selectedEvents;
 
@@ -24,12 +35,27 @@ class _CalendarState extends State<Calendar> {
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
 
-  TextEditingController _eventController = TextEditingController();
-
   @override
   void initState() {
     selectedEvents = {};
     super.initState();
+  }
+
+  getAllData(int categoryId, String tarih) async {
+    _detailedListList = <detailedList>[];
+    var detailedLists =
+        await _DetailedListService.readDetailedList(categoryId, tarih);
+    detailedLists.forEach((detailedListe) {
+      setState(() {
+        var detailedListModel =
+            detailedList(); // detailed listin bir nesnesi verileri tutmak için normal bir class nesnesi
+        detailedListModel.id = detailedListe['id'];
+        detailedListModel.konu = detailedListe['konu'];
+        detailedListModel.aciklama = detailedListe['aciklama'];
+        detailedListModel.tarih = detailedListe['tarih'];
+        _detailedListList.add(detailedListModel);
+      });
+    });
   }
 
   List<Event> _getEventsfromDay(DateTime date) {
@@ -38,49 +64,69 @@ class _CalendarState extends State<Calendar> {
 
   @override
   void dispose() {
-    _eventController.dispose();
+    //_eventController.dispose();
     super.dispose();
   }
 
   /////////////////////////////// PopUp Fonksiyonu ///////////////////////////////
   CreatePopUp(BuildContext context) {
-    TextEditingController customController = TextEditingController();
-
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: Text("Go Details?"),
-            content: TextFormField(
-              controller: _eventController,
-            ),
+            content: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: _detailedListList.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    elevation: 8.0,
+                    child: ListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(_detailedListList[index].konu!),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
             scrollable: true,
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text("Cancel"),
+                onPressed: () async {
+                  Navigator.pop(context);
+                  await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DetailedList(
+                          categoryId: this.categoryId,
+                          tarih: selectedDay.toString())));
+                },
+                child: Text("Go To Detailes"),
               ),
-              TextButton(
-                onPressed: () {
+              /*TextButton(
+                child: Text("Ok"),
+                onPressed: () async {
+                  Navigator.pop(context);
+                  await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DetailedList(
+                          categoryId: this.categoryId,
+                          tarih: selectedDay.toString())));
+
                   if (_eventController.text.isEmpty) {
                   } else {
                     if (selectedEvents[selectedDay] != null) {
                       selectedEvents[selectedDay]!.add(
-                        Event(title: _eventController.text),
+                        Event(title: _detailedListList[index].konu!),
                       );
                     } else {
-                      selectedEvents[selectedDay] = [
-                        Event(title: _eventController.text)
-                      ];
+                      selectedEvents[selectedDay] = [Event(title: "Selamlar")];
                     }
                   }
-                  Navigator.pop(context);
-                  _eventController.clear();
                   setState(() {});
                   return;
                 },
-                child: Text("Ok"),
-              ),
+              ),*/
             ],
           );
         });
@@ -112,17 +158,16 @@ class _CalendarState extends State<Calendar> {
               setState(() {
                 selectedDay = selectDay;
                 focusedDay = focusDay;
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => DetailedList(
-                        categoryId: this.categoryId,
-                        tarih: selectedDay.toString())));
               });
-
+              getAllData(this.categoryId, selectedDay.toString());
               //PopUp Ekranı
               CreatePopUp(context);
             },
+
             // TO Get events
-            eventLoader: _getEventsfromDay,
+            eventLoader: (selectedDay) {
+              return _getEventsfromDay(selectedDay);
+            },
 
             //to style the calendar
             calendarStyle: CalendarStyle(
