@@ -5,7 +5,7 @@ class detailedList{
   String? aciklama;
   String? tarih;
 
-  categoryMap(){
+  detailedListMap(){
     var mapping = Map<String, dynamic>();
     mapping['id'] = id;
     mapping['categoryId']= categoryId;
