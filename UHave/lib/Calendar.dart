@@ -6,6 +6,7 @@ import 'package:uhave_project/event.dart';
 import 'DetailedList.dart';
 import 'package:uhave_project/services/detailedlist_service.dart';
 import 'modules/detailedList.dart';
+import 'event.dart';
 
 class Calendar extends StatefulWidget {
   late int categoryId;
@@ -17,7 +18,9 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
+
   late int categoryId;
+
   var _detailedListList;
 
   var detailedLists;
@@ -27,6 +30,7 @@ class _CalendarState extends State<Calendar> {
   var _DetailedListService = DetailedListService();
 
   var _detailedList = detailedList();
+
   // To Hold Events
   late Map<DateTime, List<Event>> selectedEvents;
 
@@ -37,11 +41,12 @@ class _CalendarState extends State<Calendar> {
 
   @override
   void initState() {
-    selectedEvents = {};
+    getAllEvents(categoryId);
     super.initState();
   }
 
   getAllData(int categoryId, String tarih) async {
+
     _detailedListList = <detailedList>[];
     var detailedLists =
         await _DetailedListService.readDetailedList(categoryId, tarih);
@@ -58,13 +63,26 @@ class _CalendarState extends State<Calendar> {
     });
   }
 
-  List<Event> _getEventsfromDay(DateTime date) {
-    return selectedEvents[date] ?? [];
-  }
+  getAllEvents(int categoryId) async{
+    _detailedListList = <detailedList>[];
+    var detailedLists =
+    await _DetailedListService.readAllDetailedList(categoryId);
+    detailedLists.forEach((detailedListe) {
+      setState(() {
+        var detailedListModel =
+        detailedList(); // detailed listin bir nesnesi verileri tutmak için normal bir class nesnesi
+        detailedListModel.id = detailedListe['id'];
+        detailedListModel.konu = detailedListe['konu'];
+        detailedListModel.aciklama = detailedListe['aciklama'];
+        detailedListModel.tarih = detailedListe['tarih'];
+        _detailedListList.add(detailedListModel);
+      });
+    });
+}
+
 
   @override
   void dispose() {
-    //_eventController.dispose();
     super.dispose();
   }
 
@@ -74,7 +92,8 @@ class _CalendarState extends State<Calendar> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text("Go Details?"),
+            backgroundColor: Colors.indigo[200],
+            title: Text("Go Details?",style: TextStyle(color: Colors.white)),
             content: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
@@ -102,31 +121,8 @@ class _CalendarState extends State<Calendar> {
                           categoryId: this.categoryId,
                           tarih: selectedDay.toString())));
                 },
-                child: Text("Go To Detailes"),
+                child: Text("Go To Detailes",style: TextStyle(color: Colors.white)),
               ),
-              /*TextButton(
-                child: Text("Ok"),
-                onPressed: () async {
-                  Navigator.pop(context);
-                  await Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DetailedList(
-                          categoryId: this.categoryId,
-                          tarih: selectedDay.toString())));
-
-                  if (_eventController.text.isEmpty) {
-                  } else {
-                    if (selectedEvents[selectedDay] != null) {
-                      selectedEvents[selectedDay]!.add(
-                        Event(title: _detailedListList[index].konu!),
-                      );
-                    } else {
-                      selectedEvents[selectedDay] = [Event(title: "Selamlar")];
-                    }
-                  }
-                  setState(() {});
-                  return;
-                },
-              ),*/
             ],
           );
         });
@@ -138,6 +134,7 @@ class _CalendarState extends State<Calendar> {
       appBar: AppBar(
         title: Text("Calendar "),
         centerTitle: true,
+        backgroundColor: Colors.indigo,
       ),
       body: Column(
         children: [
@@ -153,6 +150,7 @@ class _CalendarState extends State<Calendar> {
             },
             startingDayOfWeek: StartingDayOfWeek.sunday,
             daysOfWeekVisible: true,
+
             // When Select New Day =>
             onDaySelected: (DateTime selectDay, DateTime focusDay) {
               setState(() {
@@ -163,12 +161,6 @@ class _CalendarState extends State<Calendar> {
               //PopUp Ekranı
               CreatePopUp(context);
             },
-
-            // TO Get events
-            eventLoader: (selectedDay) {
-              return _getEventsfromDay(selectedDay);
-            },
-
             //to style the calendar
             calendarStyle: CalendarStyle(
               markersAlignment: Alignment.bottomCenter,
@@ -180,7 +172,7 @@ class _CalendarState extends State<Calendar> {
               ),
               isTodayHighlighted: true,
               selectedDecoration: BoxDecoration(
-                color: Colors.redAccent,
+                color: Colors.indigo[600],
                 shape: BoxShape.circle,
               ),
               selectedTextStyle: TextStyle(color: Colors.white),
@@ -188,11 +180,6 @@ class _CalendarState extends State<Calendar> {
             selectedDayPredicate: (DateTime date) {
               return isSameDay(selectedDay, date);
             },
-          ),
-          ..._getEventsfromDay(selectedDay).map(
-            (Event event) => ListTile(
-              title: Text(event.title),
-            ),
           ),
         ],
       ),
