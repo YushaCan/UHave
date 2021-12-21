@@ -22,6 +22,11 @@ class DetailedListRepository{
   }
 
   //read data from table
+  readAllData(table, categoryId) async{
+    var connection = await database;
+    return await connection!.query(table, where: 'categoryId=?', whereArgs: [categoryId]);
+  }
+
   readData(table, categoryId, tarih) async{
     var connection = await database;
     return await connection!.query(table, where: 'categoryId=? and tarih=?', whereArgs: [categoryId,tarih]);
