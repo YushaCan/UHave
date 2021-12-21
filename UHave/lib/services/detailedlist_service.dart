@@ -9,9 +9,12 @@ class DetailedListService{
   }
   // creating data
   saveDetailedList(detailedList list) async{
-    return await _respository.insertData('detailedList', list.categoryMap());
+    return await _respository.insertData('detailedList', list.detailedListMap());
   }
 
+  readAllDetailedList(categoryId) async{
+    return await _respository.readAllData('detailedList',categoryId);
+  }
   readDetailedList(categoryId,tarih) async{
     return await _respository.readData('detailedList',categoryId,tarih);
   }
@@ -23,7 +26,7 @@ class DetailedListService{
 
   // update data from table
   updateDetailedList(detailedList list) async {
-    return await _respository.updateData('detailedList', list.categoryMap());
+    return await _respository.updateData('detailedList', list.detailedListMap());
   }
 
   // delete category from database
