@@ -2,11 +2,9 @@ import 'dart:collection';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:uhave_project/event.dart';
 import 'DetailedList.dart';
 import 'package:uhave_project/services/detailedlist_service.dart';
 import 'modules/detailedList.dart';
-import 'event.dart';
 
 class Calendar extends StatefulWidget {
   late int categoryId;
@@ -18,7 +16,6 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-
   late int categoryId;
 
   var _detailedListList;
@@ -31,9 +28,6 @@ class _CalendarState extends State<Calendar> {
 
   var _detailedList = detailedList();
 
-  // To Hold Events
-  late Map<DateTime, List<Event>> selectedEvents;
-
   _CalendarState(this.categoryId);
   CalendarFormat format = CalendarFormat.month;
   DateTime selectedDay = DateTime.now();
@@ -41,12 +35,11 @@ class _CalendarState extends State<Calendar> {
 
   @override
   void initState() {
-    getAllEvents(categoryId);
+    //getAllEvents(categoryId);
     super.initState();
   }
 
   getAllData(int categoryId, String tarih) async {
-
     _detailedListList = <detailedList>[];
     var detailedLists =
         await _DetailedListService.readDetailedList(categoryId, tarih);
@@ -63,14 +56,15 @@ class _CalendarState extends State<Calendar> {
     });
   }
 
-  getAllEvents(int categoryId) async{
+/*
+  getAllEvents(int categoryId) async {
     _detailedListList = <detailedList>[];
     var detailedLists =
-    await _DetailedListService.readAllDetailedList(categoryId);
+        await _DetailedListService.readAllDetailedList(categoryId);
     detailedLists.forEach((detailedListe) {
       setState(() {
         var detailedListModel =
-        detailedList(); // detailed listin bir nesnesi verileri tutmak için normal bir class nesnesi
+            detailedList(); // detailed listin bir nesnesi verileri tutmak için normal bir class nesnesi
         detailedListModel.id = detailedListe['id'];
         detailedListModel.konu = detailedListe['konu'];
         detailedListModel.aciklama = detailedListe['aciklama'];
@@ -78,9 +72,8 @@ class _CalendarState extends State<Calendar> {
         _detailedListList.add(detailedListModel);
       });
     });
-}
-
-
+  }
+*/
   @override
   void dispose() {
     super.dispose();
@@ -93,7 +86,7 @@ class _CalendarState extends State<Calendar> {
         builder: (context) {
           return AlertDialog(
             backgroundColor: Colors.indigo[200],
-            title: Text("Go Details?",style: TextStyle(color: Colors.white)),
+            title: Text("Go Details?", style: TextStyle(color: Colors.white)),
             content: ListView.builder(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
@@ -121,7 +114,8 @@ class _CalendarState extends State<Calendar> {
                           categoryId: this.categoryId,
                           tarih: selectedDay.toString())));
                 },
-                child: Text("Go To Detailes",style: TextStyle(color: Colors.white)),
+                child: Text("Go To Detailes",
+                    style: TextStyle(color: Colors.white)),
               ),
             ],
           );
