@@ -28,7 +28,6 @@ class NotificationService extends ChangeNotifier {
 
   //Instant Notification
   Future instantNotification(String tarih) async {
-
     var date = DateTime.parse(tarih);
 
     date = date.subtract(Duration(days: 1));
@@ -39,24 +38,8 @@ class NotificationService extends ChangeNotifier {
 
     var platform = new NotificationDetails(android: android, iOS: ios);
 
-    await _flutterLocalNotificationsPlugin.schedule(0, "demo instant ", "tap to do something", date, platform);
-  }
-
-  //Scheduled Notification
-
-  Future scheduledNotification() async {
-
-    var interval = RepeatInterval.daily;
-
-    var android = AndroidNotificationDetails("id", "channel");
-
-    var ios = IOSNotificationDetails();
-
-    var platform = new NotificationDetails(android: android, iOS: ios);
-
-    await _flutterLocalNotificationsPlugin.periodicallyShow(
-        0, "demo Scheduled ", "tap to do something", interval, platform);
-
+    await _flutterLocalNotificationsPlugin.schedule(
+        0, "UHave", "Yarına kayıtlı yapılacaklarınız var.", date, platform);
   }
 
   //cancel notification
