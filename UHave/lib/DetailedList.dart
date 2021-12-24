@@ -110,7 +110,7 @@ class _DetailedListState extends State<DetailedList> {
                       )),
             ],
             title: Text(
-              "Add New Category",
+              "Add New Event",
               style: TextStyle(color: Colors.white),
             ),
             content: SingleChildScrollView(
