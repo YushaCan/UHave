@@ -12,14 +12,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    /*  return MaterialApp(
-      title: "calendar",
-      home: HomePage(),
-      //routes: {'/calendar': (_) => Calendar()},
-      //bu örnekte static veriler sadece transfer edilir sayfalar arasında
-      //onGenerateRoute: (settings){},
-    ); */
-
     return MultiProvider(
       child: MaterialApp(
         theme: ThemeData(fontFamily: 'Monteserat'),
