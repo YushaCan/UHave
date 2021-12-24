@@ -75,32 +75,44 @@ class _DetailedListState extends State<DetailedList> {
             actions: <Widget>[
               Consumer<NotificationService>(
                   builder: (context, model, _) => Row(
-                    children: [
-                      FlatButton(
-                          color:  Colors.pink[50],
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('Cancel',style: TextStyle(color: Colors.black),)),
-                      FlatButton(
-                          color:  Colors.pink[50],
-                          onPressed: () async {
-                            _detailedList.konu = _detailedListKonuController.text;
-                            _detailedList.aciklama =
-                                _detailedListAciklamaController.text;
-                            _detailedList.categoryId = this.categoryId;
-                            _detailedList.tarih = this.tarih;
-                            _DetailedListService.saveDetailedList(_detailedList).then(
-                                    (id) => print("detailed list Id that was loaded: $id"));
-                            if(isPressed==true){
-                              model.instantNotification(this.tarih);
-                            }
-                            getAllData(this.categoryId, this.tarih);
-                            Navigator.pop(context);
-                          },
-                          child: Text('Save',style: TextStyle(color: Colors.black),)),
-                    ],
-                  )),
+                        children: [
+                          FlatButton(
+                              color: Colors.pink[50],
+                              onPressed: () => Navigator.pop(context),
+                              child: Text(
+                                'Cancel',
+                                style: TextStyle(color: Colors.black),
+                              )),
+                          FlatButton(
+                              color: Colors.pink[50],
+                              onPressed: () async {
+                                _detailedList.konu =
+                                    _detailedListKonuController.text;
+                                _detailedList.aciklama =
+                                    _detailedListAciklamaController.text;
+                                _detailedList.categoryId = this.categoryId;
+                                _detailedList.tarih = this.tarih;
+                                _DetailedListService.saveDetailedList(
+                                        _detailedList)
+                                    .then((id) => print(
+                                        "detailed list Id that was loaded: $id"));
+                                if (isPressed == true) {
+                                  model.instantNotification(this.tarih);
+                                }
+                                getAllData(this.categoryId, this.tarih);
+                                Navigator.pop(context);
+                              },
+                              child: Text(
+                                'Save',
+                                style: TextStyle(color: Colors.black),
+                              )),
+                        ],
+                      )),
             ],
-            title: Text("Add New Category",style: TextStyle(color: Colors.white),),
+            title: Text(
+              "Add New Category",
+              style: TextStyle(color: Colors.white),
+            ),
             content: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
@@ -112,7 +124,7 @@ class _DetailedListState extends State<DetailedList> {
                         labelText: 'Subject',
                         labelStyle: TextStyle(color: Colors.white)),
                   ),
-                   TextField(
+                  TextField(
                     controller: _detailedListAciklamaController,
                     decoration: InputDecoration(
                         hintText: 'Enter description',
@@ -121,11 +133,12 @@ class _DetailedListState extends State<DetailedList> {
                         labelStyle: TextStyle(color: Colors.white)),
                   ),
                   IconButton(
-                      onPressed: (){
-                        isPressed=true;
-                      },
-                      icon: Icon(Icons.alarm),
-                  color: Colors.white,),
+                    onPressed: () {
+                      isPressed = true;
+                    },
+                    icon: Icon(Icons.alarm),
+                    color: Colors.white,
+                  ),
                 ],
               ),
             ),
@@ -144,30 +157,39 @@ class _DetailedListState extends State<DetailedList> {
               FlatButton(
                   color: Colors.purple[50],
                   onPressed: () => Navigator.pop(context),
-                  child: Text('Cancel',style: TextStyle(color: Colors.black),)
-              ),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.black),
+                  )),
               FlatButton(
                   color: Colors.purple[50],
                   onPressed: () async {
-                    _DetailedListService
-                        .deleteDetailedList(detailedListId)
-                        .then((detailedListId) => print("Id that was loaded: $detailedListId"));
+                    _DetailedListService.deleteDetailedList(detailedListId)
+                        .then((detailedListId) =>
+                            print("Id that was loaded: $detailedListId"));
                     Navigator.pop(context);
-                    getAllData(categoryId,tarih);
+                    getAllData(categoryId, tarih);
                     _showSuccessSnackBar(Text('Deleted!'));
                   },
-                  child: Text('Delete',style: TextStyle(color: Colors.black),)),
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.black),
+                  )),
             ],
-            title: Text("Are you sure?",style: TextStyle(color: Colors.white),),
+            title: Text(
+              "Are you sure?",
+              style: TextStyle(color: Colors.white),
+            ),
           );
         });
   }
+
   _showSuccessSnackBar(message) {
     var _snackbar = SnackBar(content: message);
     _globalKey.currentState!.showSnackBar(_snackbar);
   }
 
-  _editFormDialog(BuildContext context,detailedListId) {
+  _editFormDialog(BuildContext context, detailedListId) {
     return showDialog(
         context: context,
         barrierDismissible: true,
@@ -178,19 +200,26 @@ class _DetailedListState extends State<DetailedList> {
               FlatButton(
                   color: Colors.purple[50],
                   onPressed: () => Navigator.pop(context),
-                  child: Text('Cancel',style: TextStyle(color: Colors.black),)),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.black),
+                  )),
               FlatButton(
                   color: Colors.purple[50],
                   onPressed: () async {
                     _detailedList.id = detailedListId;
                     _detailedList.konu = _detailedListKonuController.text;
-                    _detailedList.aciklama = _detailedListAciklamaController.text;
+                    _detailedList.aciklama =
+                        _detailedListAciklamaController.text;
                     _DetailedListService.updateDetailedList(_detailedList);
                     Navigator.pop(context);
-                    getAllData(categoryId,tarih);
+                    getAllData(categoryId, tarih);
                     _showSuccessSnackBar(Text('Updated!'));
                   },
-                  child: Text('Update',style: TextStyle(color: Colors.black),)),
+                  child: Text(
+                    'Update',
+                    style: TextStyle(color: Colors.black),
+                  )),
             ],
             title: Text("Edit Category"),
             content: SingleChildScrollView(
@@ -199,8 +228,7 @@ class _DetailedListState extends State<DetailedList> {
                   TextField(
                     controller: _detailedListKonuController,
                     decoration: InputDecoration(
-                        hintText: 'Enter a subject ',
-                        labelText: 'subject'),
+                        hintText: 'Enter a subject ', labelText: 'subject'),
                   ),
                   TextField(
                     controller: _detailedListAciklamaController,
@@ -214,12 +242,15 @@ class _DetailedListState extends State<DetailedList> {
           );
         });
   }
+
   _editDetailedList(BuildContext context, detailedListId) async {
-    detailedlist = await _DetailedListService.readDetailedListById(detailedListId);
+    detailedlist =
+        await _DetailedListService.readDetailedListById(detailedListId);
     setState(() {
-      _editDetailedListNameController.text = detailedlist[0]['konu'] ?? 'No konu';
+      _editDetailedListNameController.text =
+          detailedlist[0]['konu'] ?? 'No konu';
     });
-    _editFormDialog(context,detailedListId);
+    _editFormDialog(context, detailedListId);
   }
 
   @override
@@ -242,18 +273,22 @@ class _DetailedListState extends State<DetailedList> {
                   children: <Widget>[
                     Column(
                       children: [
-                        Text(_detailedListList[index].konu!,
+                        Text(
+                          _detailedListList[index].konu!,
                           style: TextStyle(
                             color: Colors.white,
                             fontStyle: FontStyle.italic,
                             fontSize: 20,
-                          ),),
-                        Text(_detailedListList[index].aciklama!,
+                          ),
+                        ),
+                        Text(
+                          _detailedListList[index].aciklama!,
                           style: TextStyle(
                             color: Colors.white,
                             fontStyle: FontStyle.italic,
                             fontSize: 14,
-                          ),),
+                          ),
+                        ),
                       ],
                     ),
                     Row(
@@ -262,13 +297,15 @@ class _DetailedListState extends State<DetailedList> {
                             icon: Icon(Icons.delete),
                             color: Colors.white,
                             onPressed: () {
-                              _deleteFormDialog(context, _detailedListList[index].id);
+                              _deleteFormDialog(
+                                  context, _detailedListList[index].id);
                             }),
                         IconButton(
                             icon: Icon(Icons.edit),
                             color: Colors.white,
                             onPressed: () {
-                              _editDetailedList(context, _detailedListList[index].id);
+                              _editDetailedList(
+                                  context, _detailedListList[index].id);
                             }),
                       ],
                     ),
